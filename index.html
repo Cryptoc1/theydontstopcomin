@@ -24,16 +24,23 @@
             text-align: center;
             letter-spacing: 2pt;
         }
-        
+        /*
         iframe {
-            /*            display: none;*/
+            display: none;
         }
+*/
     </style>
     <script>
-        var pre = "well she was looking kind of dumb with her finger and her thumb in the shape of an 'L' on her forehead.".split(' ')
-        var c, interval, start
+        var pre = "Somebody once told me the world is gonna roll me I ain't the sharpest tool in the shed she was looking kind of dumb with her finger and her thumb in the shape of an 'L' on her forehead.".split(' ')
+        window.onload = function () {
+            var audio = document.getElementsByTagName('audio'),
+                preAudio = audio[0],
+                dontStopAudio = audio[1]
+            preAudio.addEventListener('playing', printPreamble, false)
 
-        function l(e) {
+        }
+
+        function printPreamble() {
             c = document.getElementById('content')
             start = Date.now()
 
@@ -45,39 +52,72 @@
                 } else {
                     c.innerHTML += "<br>"
                     clearInterval(loserInterval)
+                    console.log('finished')
                 }
-            }, 280)
-
-            setTimeout(function () {
-                interval = setInterval(neverStop, 680)
-            }, 10000)
-        }
-
-        var current = 0
-
-        function neverStop() {
-            if (Date.now() - start >= 36000000) {
-                okayMaybeItStopsCominWhenTheVideoAKATheSoundStops()
-            } else {
-                if (current == 0) {
-                    c.innerHTML += "well, the years start comin'<br>"
-                    current = 1
-                } else {
-                    c.innerHTML += "and they don't stop comin'<br>"
-                }
-                window.scrollTo(0, document.body.scrollHeight)
-            }
-        }
-
-        function okayMaybeItStopsCominWhenTheVideoAKATheSoundStops() {
-            clearInterval(interval)
+            }, 460)
         }
     </script>
 </head>
 
 <body>
-    <iframe id="smashing" width="420" height="315" src="https://www.youtube.com/embed/HgQEuPw942c?autoplay=1" frameborder="0" onload="l(this)"></iframe>
+    <!--    <iframe id="smashing" width="420" height="315" src="https://www.youtube.com/embed/HgQEuPw942c?autoplay=1" frameborder="0" onload="l(this)"></iframe>-->
     <div id="content"></div>
+    <audio id="preamble" src="preamble.mp3" autoplay></audio>
+    <audio id="dontstop" src="dontstop.mp3" preload="auto"></audio>
 </body>
+<!--
+<script>
+    var preamble = "Somebody once told me the world is gonna roll me I ain't the sharpest tool in the shed she was looking kind of dumb with her finger and her thumb in the shape of an 'L' on her forehead.".split(' ')
+    var c, interval, start
+
+    window.onload = function () {
+        var preAudio = document.getElementById('premable')
+        preAudio.addEventListener('load', preambleLoaded, false)
+        var dontStopAudio = document.getElementById('dontstop')
+        dontStopAudio.pause()
+    }
+
+    function preambleLoaded(e) {
+        console.log(e)
+        c = document.getElementById('content')
+        start = Date.now()
+
+        var index = 0
+        var loserInterval = setInterval(function () {
+            c.innerHTML += pre[index] + " "
+            if (index < pre.length - 1) {
+                index++
+            } else {
+                c.innerHTML += "<br>"
+                clearInterval(loserInterval)
+            }
+        }, 280)
+
+        setTimeout(function () {
+            interval = setInterval(neverStop, 680)
+        }, 10000)
+    }
+
+    var current = 0
+
+    function neverStop() {
+        if (Date.now() - start >= 36000000) {
+            okayMaybeItStopsCominWhenTheVideoAKATheSoundStops()
+        } else {
+            if (current == 0) {
+                c.innerHTML += "well, the years start comin'<br>"
+                current = 1
+            } else {
+                c.innerHTML += "and they don't stop comin'<br>"
+            }
+            window.scrollTo(0, document.body.scrollHeight)
+        }
+    }
+
+    function okayMaybeItStopsCominWhenTheVideoAKATheSoundStops() {
+        clearInterval(interval)
+    }
+</script>
+-->
 
 </html>
