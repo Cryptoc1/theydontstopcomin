@@ -69,6 +69,10 @@
         a:hover {
             text-decoration: underline;
         }
+        
+        #autoplay-link {
+            display: none;
+        }
     </style>
     <script>
         var pre = "Somebody once told me the world is gonna roll me. I ain't the sharpest tool in the shed.  She was looking kind of dumb with her finger and her thumb in the shape of an 'L' on her forehead.".split(' ')
@@ -84,7 +88,8 @@
                 preAudio = audio[0],
                 dontStopAudio = audio[1]
 
-            preAudio.play()
+            var link = document.getElementById('autoplay-link').click()
+
             preAudio.addEventListener('playing', printPreamble, false)
             preAudio.addEventListener('ended', neverStops, false)
 
@@ -136,12 +141,18 @@
                 clearInterval(neverStopInterval)
             }
         }
+
+        function autoplay() {
+            document.getElementById('preamble').play()
+        }
     </script>
 </head>
 
 <body>
     <div id="content"></div>
     <div class="attr"><a href="https://3bytes.xyz"><span style="font-size: 15pt;">&copy;</span> <span class="hidden">Samuel Steele</span></a></div>
+    <!--  http://stackoverflow.com/questions/26066062/autoplay-html5-audio-player-on-mobile-browsers  -->
+    <a id="autoplay-link" href="javascript:autoplay()"></a>
     <audio id="preamble" src="preamble.mp3"></audio>
     <audio id="dontstop" src="dontstop.mp3" preload="auto" loop></audio>
 </body>
