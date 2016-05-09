@@ -138,7 +138,7 @@
             }
 
             function neverStops() {
-                dontStopAudio.src = "dontstop.mp3"
+                dontStopAudio.play()
                 neverStopInterval = setInterval(printTheShitMan, 400)
             }
 
@@ -162,6 +162,8 @@
 
         function autoplay(e) {
             document.getElementById('preamble').play()
+            document.getElementById('dontstop').play()
+            document.getElementById('dontstop').pause()
             document.getElementById('autoplay-link').style.display = 'none';
         }
 
