@@ -16,108 +16,134 @@
             color: rgba(250, 250, 250, .98);
             font-size: 1.28em;
             font-weight: 700;
+            font-smoothing: antialiased;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
         
         #content {
             width: 100%;
-            font-size: 68pt;
+            font-size: 80pt;
             text-align: center;
             letter-spacing: 2pt;
+            padding: 1%;
         }
-        /*
-        iframe {
-            display: none;
+        
+        .attr {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding: 6pt;
+            font-size: 12pt;
         }
-*/
+        
+        .hidden {
+            opacity: 0;
+        }
+        
+        .attr:hover {
+            background-color: #111111;
+        }
+        
+        .attr:hover .hidden {
+            animation: fade .15s linear;
+            animation-fill-mode: forwards;
+        }
+        
+        @keyframes fade {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        a {
+            text-decoration: none;
+            color: #3F51B5;
+        }
+        
+        a:active,
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
     <script>
-        var pre = "Somebody once told me the world is gonna roll me I ain't the sharpest tool in the shed she was looking kind of dumb with her finger and her thumb in the shape of an 'L' on her forehead.".split(' ')
+        var pre = "Somebody once told me the world is gonna roll me. I ain't the sharpest tool in the shed.  She was looking kind of dumb with her finger and her thumb in the shape of an 'L' on her forehead.".split(' ')
+
+        var c = document.getElementById('content'),
+            preInterval,
+            neverStopInterval
+
         window.onload = function () {
+            c = document.getElementById('content')
+
             var audio = document.getElementsByTagName('audio'),
                 preAudio = audio[0],
                 dontStopAudio = audio[1]
+
+            preAudio.play()
             preAudio.addEventListener('playing', printPreamble, false)
+            preAudio.addEventListener('ended', neverStops, false)
 
-        }
-
-        function printPreamble() {
-            c = document.getElementById('content')
-            start = Date.now()
-
-            var index = 0
-            var loserInterval = setInterval(function () {
-                c.innerHTML += pre[index] + " "
-                if (index < pre.length - 1) {
-                    index++
-                } else {
-                    c.innerHTML += "<br>"
-                    clearInterval(loserInterval)
-                    console.log('finished')
+            window.addEventListener('keyup', function (e) {
+                switch (e.keyCode) {
+                case 32:
+                    if (!dontStopAudio.paused) {
+                        okayMaybeTheyStopComingWhenYouPressTheSpaceBar()
+                    } else if (dontStopAudio.paused && preAudio.paused) {
+                        neverStops()
+                    }
+                    break
                 }
-            }, 460)
+            }, false)
+
+            function printPreamble() {
+                var index = 0
+                preInterval = setInterval(function () {
+                    c.innerHTML += pre[index] + " "
+                    if (index < pre.length - 1) {
+                        index++
+                    } else {
+                        c.innerHTML += "<br>"
+                        clearInterval(preInterval)
+                    }
+                    window.scrollTo(0, document.body.scrollHeight)
+                }, 420)
+            }
+
+            function neverStops() {
+                dontStopAudio.play()
+                neverStopInterval = setInterval(printTheShitMan, 400)
+            }
+
+            var current = 0
+
+            function printTheShitMan() {
+                if (current == 0) {
+                    c.innerHTML += "WELL!<br> the years start comin'"
+                    current = 1
+                } else {
+                    c.innerHTML += ", and they don't stop comin'"
+                }
+                window.scrollTo(0, document.body.scrollHeight)
+            }
+
+            function okayMaybeTheyStopComingWhenYouPressTheSpaceBar() {
+                dontStopAudio.pause()
+                clearInterval(neverStopInterval)
+            }
         }
     </script>
 </head>
 
 <body>
-    <!--    <iframe id="smashing" width="420" height="315" src="https://www.youtube.com/embed/HgQEuPw942c?autoplay=1" frameborder="0" onload="l(this)"></iframe>-->
     <div id="content"></div>
-    <audio id="preamble" src="preamble.mp3" autoplay></audio>
-    <audio id="dontstop" src="dontstop.mp3" preload="auto"></audio>
+    <div class="attr"><a href="https://3bytes.xyz"><span style="font-size: 15pt;">&copy;</span> <span class="hidden">Samuel Steele</span></a></div>
+    <audio id="preamble" src="preamble.mp3"></audio>
+    <audio id="dontstop" src="dontstop.mp3" preload="auto" loop></audio>
 </body>
-<!--
-<script>
-    var preamble = "Somebody once told me the world is gonna roll me I ain't the sharpest tool in the shed she was looking kind of dumb with her finger and her thumb in the shape of an 'L' on her forehead.".split(' ')
-    var c, interval, start
-
-    window.onload = function () {
-        var preAudio = document.getElementById('premable')
-        preAudio.addEventListener('load', preambleLoaded, false)
-        var dontStopAudio = document.getElementById('dontstop')
-        dontStopAudio.pause()
-    }
-
-    function preambleLoaded(e) {
-        console.log(e)
-        c = document.getElementById('content')
-        start = Date.now()
-
-        var index = 0
-        var loserInterval = setInterval(function () {
-            c.innerHTML += pre[index] + " "
-            if (index < pre.length - 1) {
-                index++
-            } else {
-                c.innerHTML += "<br>"
-                clearInterval(loserInterval)
-            }
-        }, 280)
-
-        setTimeout(function () {
-            interval = setInterval(neverStop, 680)
-        }, 10000)
-    }
-
-    var current = 0
-
-    function neverStop() {
-        if (Date.now() - start >= 36000000) {
-            okayMaybeItStopsCominWhenTheVideoAKATheSoundStops()
-        } else {
-            if (current == 0) {
-                c.innerHTML += "well, the years start comin'<br>"
-                current = 1
-            } else {
-                c.innerHTML += "and they don't stop comin'<br>"
-            }
-            window.scrollTo(0, document.body.scrollHeight)
-        }
-    }
-
-    function okayMaybeItStopsCominWhenTheVideoAKATheSoundStops() {
-        clearInterval(interval)
-    }
-</script>
--->
 
 </html>
