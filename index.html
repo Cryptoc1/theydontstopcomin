@@ -86,7 +86,7 @@
         }
     </style>
     <script>
-        var pre = "Somebody once told me the world is gonna roll me. I ain't the sharpest tool in the shed.  She was looking kind of dumb with her finger and her thumb in the shape of an 'L' on her forehead.".split(' ')
+        var pre = "Somebody once told me the world is gonna roll me.   I ain't the sharpest tool in the shed.   She was looking kind of dumb with her finger and her thumb in the shape of an 'L' on her forehead.".split(' ')
 
         var c = document.getElementById('content'),
             preInterval,
@@ -96,32 +96,17 @@
 
             c = document.getElementById('content')
 
-            var audio = document.getElementsByTagName('audio'),
-                preAudio = audio[0],
-                dontStopAudio = audio[1]
+            var audio = document.getElementsByTagName('audio')[0]
 
             var link = document.getElementById('autoplay-link')
             link.click()
 
-            if (isMobile() && preAudio.paused) {
+            if (isMobile() && audio.paused) {
                 link.style.display = 'inherit'
             }
 
-
-            preAudio.addEventListener('playing', printPreamble, false)
-            preAudio.addEventListener('ended', neverStops, false)
-
-            window.addEventListener('keyup', function (e) {
-                switch (e.keyCode) {
-                case 32:
-                    if (!dontStopAudio.paused) {
-                        okayMaybeTheyStopComingWhenYouPressTheSpaceBar()
-                    } else if (dontStopAudio.paused && preAudio.paused) {
-                        neverStops()
-                    }
-                    break
-                }
-            }, false)
+            audio.addEventListener('playing', printPreamble, false)
+            audio.addEventListener('ended', audioEnded, false)
 
             function printPreamble() {
                 var index = 0
@@ -134,12 +119,18 @@
                         clearInterval(preInterval)
                     }
                     window.scrollTo(0, document.body.scrollHeight)
-                }, 420)
+                }, 410)
+                setTimeout(neverStops, 18500)
+            }
+
+            function audioEnded() {
+                audio.currentTime = 20
+                audio.play()
+                neverStops()
             }
 
             function neverStops() {
-                dontStopAudio.play()
-                neverStopInterval = setInterval(printTheShitMan, 400)
+                neverStopInterval = setInterval(printTheShitMan, 985)
             }
 
             var current = 0
@@ -153,17 +144,10 @@
                 }
                 window.scrollTo(0, document.body.scrollHeight)
             }
-
-            function okayMaybeTheyStopComingWhenYouPressTheSpaceBar() {
-                dontStopAudio.pause()
-                clearInterval(neverStopInterval)
-            }
         }
 
         function autoplay(e) {
-            document.getElementById('preamble').play()
-            document.getElementById('dontstop').play()
-            document.getElementById('dontstop').pause()
+            document.getElementsByTagName('audio')[0].play()
             document.getElementById('autoplay-link').style.display = 'none';
         }
 
@@ -181,10 +165,8 @@
 <body>
     <div id="content"></div>
     <div class="attr"><a href="https://3bytes.xyz"><span style="font-size: 15pt;">&copy;</span> <span class="hidden">Samuel Steele</span></a></div>
-    <!--  http://stackoverflow.com/questions/26066062/autoplay-html5-audio-player-on-mobile-browsers  -->
     <a id="autoplay-link" href="javascript:autoplay()"><i class="fa fa-play-circle"></i></a>
-    <audio id="preamble" src="preamble.mp3"></audio>
-    <audio id="dontstop" src="dontstop.mp3" preload="auto" loop></audio>
+    <audio src="dontstopcoming.mp3" controls style="position:fixed;bottom:0;right:0;"></audio>
 </body>
 
 </html>
